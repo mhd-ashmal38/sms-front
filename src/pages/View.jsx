@@ -3,9 +3,13 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { useParams } from 'react-router-dom';
 import { allUsers } from '../services/AllApi';
 import { BASE_URL } from '../services/baseUrl';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 function View() {
 
+
+    const pdfRef=useRef()
 
     const [showspin, setShowspin] = useState(true)
 
@@ -86,6 +90,24 @@ function View() {
         return percentage.toFixed(2); // Round to 2 decimal places
     };
 
+    // pdf download
+    const downloadPDF=()=>{
+        const input=pdfRef.current;
+        html2canvas(input).then((canvas)=>{
+            const imgData=canvas.toDataURL('image/png');
+            const pdf=new jsPDF('p','mm','a4',true);
+            const pdfWidth=pdf.internal.pageSize.getWidth();
+            const pdfHeight=pdf.internal.pageSize.getHeight();
+            const imgWidth=canvas.width;
+            const imgHeight=canvas.height;
+            const ratio=Math.min(pdfWidth/imgWidth,pdfHeight/imgHeight);
+            const imgX=(pdfWidth-imgWidth*ratio)/2;
+            const imgY=30;
+            pdf.addImage(imgData,'PNG',imgX,imgY,imgWidth*ratio,imgHeight*ratio);
+            pdf.save('card.pdf')
+                });
+    };
+
     return (
         <>
             {
@@ -94,9 +116,9 @@ function View() {
                         {
                             user ?
 
-                                <div className='border shadow'>
-                                    <div className='bg-neutral py-5'>
-                                        <h1 className='text-4xl font-semibold text-center text-white'>Govt. Engineering College</h1>
+                                <div className='border shadow' ref={pdfRef}>
+                                    <div style={{backgroundColor:'#b0c4de'}} className='bg-neutral py-5'>
+                                        <h1 className='text-4xl font-semibold text-center'>Govt. Engineering College</h1>
                                     </div>
                                     <div className="avatar flex justify-center py-8">
                                         <div className="mask mask-squircle w-20 h-20 ">
@@ -120,7 +142,7 @@ function View() {
                                             <table className="table md:w-4/6 border">
                                                 {/* head */}
                                                 <thead>
-                                                    <tr className='bg-neutral text-white'>
+                                                    <tr style={{backgroundColor:'#b0c4de'}} className='bg-neutral'>
                                                         <th>Subject</th>
                                                         <th>Mark (100)</th>
                                                         <th>Grade</th>
@@ -176,6 +198,7 @@ function View() {
                                 : ""
 
                         }
+                        <div className='flex justify-end'><button className="text-white mt-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={downloadPDF}>Download PDF</button></div>
                     </div>
             }
 

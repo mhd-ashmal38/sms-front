@@ -20,3 +20,13 @@ export const deleteUser=async(id)=>{
 export const editUser=async(id,body,header)=>{
     return await commonAPI("PUT",`${BASE_URL}/edit/user/${id}`,body,header)
 }
+
+// register user
+export const regUser=async(body,header)=>{
+    return await commonAPI("POST",`${BASE_URL}/register-user`,body,header)
+}
+
+// login user
+export const getAllAccounts = async (body, header) => {
+    return await commonAPI("GET", `${BASE_URL}/get-all-accounts`, body, header);
+};

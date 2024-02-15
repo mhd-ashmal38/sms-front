@@ -4,7 +4,7 @@ function Navbar() {
     return (
         <div>
 
-            <div className="navbar bg-neutral text-neutral-content">
+            <div style={{backgroundColor:'#b0c4de'}} className="navbar bg-neutral text-neutral-content">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
